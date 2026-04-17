@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEM CRAWLER</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>GEM CRAWLER</h1>
+        <div class="hud">
+            <div id="banner" class="banner"></div>
+            <div id="relic-shelf" class="relic-shelf empty">No relics yet</div>
+            <div class="hud-controls">
+                <span>Turn timer: <span id="timer" class="timer">45s</span></span>
+                <button id="commit-btn" class="primary">Commit Turn</button>
+                <button id="new-run-btn">New Run</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="party-side">
+            <div id="party" class="party"></div>
+            <div id="spell-tray" class="spell-tray"></div>
+        </aside>
+
+        <section class="center-stage">
+            <section id="play-area" class="play-area">
+                <div id="encounter-header" class="encounter-header"></div>
+                <div id="board" class="board"></div>
+                <div id="score-tally" class="score-tally"></div>
+            </section>
+            <section id="map" class="map"></section>
+        </section>
+
+        <aside class="combat-side">
+            <div id="enemies" class="enemies"></div>
+            <div id="ult-meter" class="ult-meter"></div>
+            <ul id="log" class="log"></ul>
+        </aside>
+    </main>
+
+    <div id="overlay" class="overlay"></div>
+
+    <script type="module" src="lib/main.js"></script>
+</body>
+</html>
