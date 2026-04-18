@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GEM CRAWLER</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,21 +12,22 @@
         <h1>GEM CRAWLER</h1>
         <div class="hud">
             <div id="banner" class="banner"></div>
-            <div id="relic-shelf" class="relic-shelf empty">No relics yet</div>
+            <div id="resources" class="resources"></div>
+            <div id="factions" class="factions"></div>
+            <div id="relic-shelf" class="stash-shelf empty">Stash empty</div>
             <div class="hud-controls">
                 <span>Turn timer: <span id="timer" class="timer">45s</span></span>
-                <button id="commit-btn" class="primary">Commit Turn</button>
+                <button id="quests-btn">Quests</button>
+                <button id="codex-btn">Codex</button>
+                <button id="elements-btn">Elements</button>
+                <button id="history-btn">History</button>
+                <button id="commit-btn" class="primary">FIGHT!</button>
                 <button id="new-run-btn">New Run</button>
             </div>
         </div>
     </header>
 
     <main>
-        <aside class="party-side">
-            <div id="party" class="party"></div>
-            <div id="spell-tray" class="spell-tray"></div>
-        </aside>
-
         <section class="center-stage">
             <section id="play-area" class="play-area">
                 <div id="encounter-header" class="encounter-header"></div>
@@ -34,6 +36,11 @@
             </section>
             <section id="map" class="map"></section>
         </section>
+
+        <aside class="party-side">
+            <div id="party" class="party"></div>
+            <div id="spell-tray" class="spell-tray"></div>
+        </aside>
 
         <aside class="combat-side">
             <div id="enemies" class="enemies"></div>
