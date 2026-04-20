@@ -198,6 +198,28 @@ main {
     50%      { box-shadow: 0 0 18px rgba(247, 201, 72, 0.7); }
 }
 
+.map-node .map-node-quest-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.75rem;
+    line-height: 18px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 0 6px rgba(247, 201, 72, 0.75);
+    pointer-events: none;
+}
+.map-node.has-quest-marker {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+.map-node.has-quest-marker.cleared .map-node-quest-badge { display: none; }
+
 /* ----- floating numbers ----- */
 
 .float-layer {
@@ -361,6 +383,23 @@ main {
 .hero-card.clickable:hover {
     background: var(--bg-elev-2);
     transform: translateY(-1px);
+}
+
+.hero-card.just-received {
+    animation: hero-receive-pulse 550ms ease-out;
+}
+.hero-card.just-received .hero-loaded {
+    animation: loaded-flash 550ms ease-out;
+}
+@keyframes hero-receive-pulse {
+    0%   { box-shadow: 0 0 0 0 var(--accent); }
+    35%  { box-shadow: 0 0 14px 3px var(--accent); background: var(--bg-elev-2); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes loaded-flash {
+    0%   { filter: brightness(1); }
+    35%  { filter: brightness(1.6); }
+    100% { filter: brightness(1); }
 }
 
 .hero-level {
@@ -709,6 +748,27 @@ main {
 }
 .quest-steps li { padding: 0.15rem 0; color: var(--fg-dim); }
 .quest-steps li.done { color: var(--good); text-decoration: line-through; }
+
+.quest-generated-section { margin-bottom: 1.25rem; }
+.generated-quest .quest-plantings {
+    margin: 0.25rem 0; color: var(--fg-dim); font-size: 0.8rem;
+}
+.generated-quest .quest-next {
+    margin-top: 0.4rem; color: var(--accent); font-size: 0.85rem;
+}
+.generated-quest .quest-interferences {
+    margin-top: 0.25rem; color: var(--danger); font-size: 0.75rem; font-style: italic;
+}
+.generated-quest .quest-reward {
+    margin-top: 0.25rem; color: var(--good); font-size: 0.8rem;
+}
+.quest-status-badge {
+    margin-left: 0.5rem; padding: 0.05rem 0.4rem;
+    border-radius: 0.25rem; background: var(--bg-dim);
+    color: var(--fg-dim); font-size: 0.7rem; font-weight: normal;
+}
+.quest-item.state-completed .quest-status-badge { color: var(--good); }
+.quest-item.state-failed .quest-status-badge { color: var(--danger); }
 .char-sheet-none {
     color: var(--fg-dim);
     font-style: italic;
