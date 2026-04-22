@@ -96,11 +96,15 @@ button.primary:hover:not(:disabled) { filter: brightness(1.1); }
 
 main {
     display: grid;
-    /* board takes the rest, party in the middle is as narrow as the enemy
-       column on the right */
-    grid-template-columns: 1fr 320px 320px;
+    /* Party flanks the board on the left, enemies on the right, board
+       fills the middle. Each side column is fixed-width so the board
+       stays roughly centered as the viewport flexes. */
+    grid-template-columns: 320px 1fr 320px;
     gap: 1rem;
     padding: 1rem;
+    /* Leave room for the bottom spell bar so combat cards never slip
+       under it. Keep in sync with `.spell-tray` height below. */
+    padding-bottom: 120px;
     align-items: start;
 }
 
@@ -441,47 +445,111 @@ main {
     color: var(--fg-dim);
 }
 
+/* WoW-style action bar docked to the bottom of the viewport. Each caster
+ * gets a labeled cluster of square icon buttons; each button shows the
+ * spell glyph, a cost chip, and a tooltip on hover. Non-combat phases
+ * hide the bar entirely (see `.spell-tray.empty`). */
 .spell-tray {
-    background: var(--bg-elev);
-    border-radius: 6px;
-    padding: 0.5rem;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    height: 110px;
+    background: linear-gradient(to top, rgba(10, 12, 20, 0.96), rgba(18, 22, 32, 0.88));
+    border-top: 1px solid var(--bg-elev-2);
+    padding: 0.5rem 1rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    overflow-x: auto;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.45);
 }
 .spell-tray.empty { display: none; }
+.spell-tray.hidden { display: none; }
+.spell-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 0;
+}
 .spell-group-header {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--fg-dim);
-    margin-bottom: 0.25rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
 }
 .spell-list {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    flex-direction: row;
+    gap: 0.4rem;
 }
+
+/* Each spell/feature is a compact square tile. The glyph dominates; the
+ * cost sits under it as a small line. Hovering reveals the tooltip (the
+ * native `title` attribute). Disabled tiles desaturate. */
 .spell-btn {
-    background: var(--bg-elev-2);
-    border: 1px solid var(--bg-elev-2);
+    background: radial-gradient(circle at 30% 30%, var(--bg-elev), var(--bg));
+    border: 2px solid var(--bg-elev-2);
     color: var(--fg);
-    text-align: left;
-    padding: 0.4rem 0.6rem;
+    width: 62px;
+    height: 62px;
+    padding: 0.25rem 0.15rem;
     display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-    font-size: 0.85rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 80ms ease-out, border-color 80ms, box-shadow 80ms;
 }
 .spell-btn:not(:disabled):hover {
-    border-color: var(--sapphire);
-    background: var(--bg-elev-2);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(247, 201, 72, 0.28);
 }
 .spell-btn:disabled {
-    opacity: 0.4;
+    opacity: 0.35;
     cursor: not-allowed;
+    filter: grayscale(60%);
 }
-.spell-cost { color: var(--sapphire); font-weight: bold; }
+.spell-btn .spell-name {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+.spell-btn .spell-label {
+    font-size: 0.55rem;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 56px;
+}
+.spell-btn .spell-cost {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 0.55rem;
+    padding: 0.05rem 0.25rem;
+    background: rgba(10, 12, 20, 0.82);
+    border-radius: 4px;
+    color: var(--sapphire);
+    font-weight: bold;
+    line-height: 1.1;
+}
+.spell-btn.feature-btn {
+    border-color: rgba(247, 201, 72, 0.35);
+}
+.spell-btn.feature-btn .spell-cost {
+    color: var(--accent);
+}
 
 /* Character sheet: compact two-column layout so the whole sheet fits on
  * one viewport on typical laptop screens. Outer panel is a vertical flex
@@ -1371,15 +1439,43 @@ button.danger:hover:not(:disabled) {
 .enemy-name { font-weight: bold; margin-bottom: 0.3rem; }
 .enemy-intent { font-size: 0.8rem; color: var(--fg-dim); margin-top: 0.3rem; }
 
+/* The log is accumulated in DOM but only surfaced via the HUD "Log"
+ * button. `log-hidden` is the baseline — remove it inside the overlay
+ * clone (see `.log-modal .log`) to show the entries. */
 .log {
     list-style: none;
     margin: 0;
     padding: 0.5rem;
     background: var(--bg-elev);
     border-radius: 6px;
-    max-height: 280px;
+    max-height: 60vh;
     overflow-y: auto;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+}
+.log-hidden { display: none; }
+
+.log-modal {
+    text-align: left;
+    width: min(96vw, 780px);
+    max-height: 86vh;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.log-modal h2 {
+    margin: 0;
+    color: var(--accent);
+}
+.log-modal .log {
+    display: block;  /* overrides the baseline .log-hidden inside the overlay */
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.log-modal .log-empty {
+    color: var(--fg-dim);
+    font-style: italic;
+    padding: 0.6rem;
 }
 .log li {
     padding: 0.25rem 0.4rem;

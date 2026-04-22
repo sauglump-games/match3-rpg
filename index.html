@@ -20,6 +20,7 @@
                 <button id="quests-btn">Quests</button>
                 <button id="codex-btn">Codex</button>
                 <button id="elements-btn">Elements</button>
+                <button id="log-btn">Log</button>
                 <button id="history-btn">History</button>
                 <button id="commit-btn" class="primary">FIGHT!</button>
                 <button id="new-run-btn">New Run</button>
@@ -28,6 +29,10 @@
     </header>
 
     <main>
+        <aside class="party-side">
+            <div id="party" class="party"></div>
+        </aside>
+
         <section class="center-stage">
             <section id="play-area" class="play-area">
                 <div id="encounter-header" class="encounter-header"></div>
@@ -37,17 +42,18 @@
             <section id="map" class="map"></section>
         </section>
 
-        <aside class="party-side">
-            <div id="party" class="party"></div>
-            <div id="spell-tray" class="spell-tray"></div>
-        </aside>
-
         <aside class="combat-side">
             <div id="enemies" class="enemies"></div>
             <div id="ult-meter" class="ult-meter"></div>
-            <ul id="log" class="log"></ul>
         </aside>
     </main>
+
+    <!-- WoW-style action bar, fixed at the bottom. -->
+    <footer id="spell-tray" class="spell-tray"></footer>
+
+    <!-- Log lives in DOM so renderLog can keep appending; the Log button
+         in the HUD surfaces it as a modal overlay on demand. -->
+    <ul id="log" class="log log-hidden"></ul>
 
     <div id="overlay" class="overlay"></div>
 
